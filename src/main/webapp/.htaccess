@@ -1,0 +1,29 @@
+Options +Indexes
+
+<FilesMatch ".ttf|.eot|.svg|.woff">
+Header set Cache-Control "max-age=604800"
+</FilesMatch>
+
+<FilesMatch ".gif|.png">
+Header set Cache-Control "max-age=604800"
+SetOutputFilter DEFLATE
+</FilesMatch>
+
+<FilesMatch ".js|.css">
+Header set Cache-Control "max-age=604800"
+SetOutputFilter DEFLATE
+</FilesMatch>
+
+<FilesMatch ".html">
+Header set Cache-Control "no-cache"
+SetOutputFilter DEFLATE
+</FilesMatch>
+
+<IfModule mod_headers.c>
+Header append Vary: Accept-Encoding
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(.*)roads$ $1roads.html [L]
+</IfModule>

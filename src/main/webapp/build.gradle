@@ -1,0 +1,119 @@
+task template << {
+        copy {
+            from 'templates/'
+            into '.'
+            include 'index.html'
+            expand(css: '<link rel="stylesheet" href="css/main.css" />', 
+            js: '<script data-main="js/main" src="js/third-party/require-2.1.11.min.js"></script>') 
+        }
+}
+
+task production << {
+//	delete('production')
+    new File('production/img').mkdirs()
+    new File('production/js').mkdirs()
+    new File('production/css/images').mkdirs()
+    new File('production/font').mkdirs()
+    new File('production/app').mkdirs()
+    new File('production/ruby').mkdirs()
+    new File('production/tmp').mkdirs()
+    new File('production/soap').mkdirs()
+    new File('production/soap/tmp').mkdirs()
+    
+    new File('build').mkdirs()
+	def salt = "?v=" + new Date().getTime()
+
+	exec {
+		commandLine '/usr/local/bin/yuicompressor', 'css/main.css', '-o', 'production/css/main.min.css'
+	}
+	
+	def css = new File('production/css/main.min.css').text
+	copy {
+	    from 'templates/'
+	    into 'production/'
+	    include 'index.html'
+	    expand(css: "<link rel=\"stylesheet\" href=\"css/main.min.css${salt}\" />", 
+	    js: "<script async src=\"js/main.min.js${salt}\"></script>") 
+	}
+    // js: "css/main.min.css${salt}") 
+	copy {
+	    from 'templates/'
+	    into '.'
+	    include 'index.html'
+	    expand(css: '<link rel="stylesheet" href="css/main.css" />', 
+	    js: '<script data-main="js/main" src="js/third-party/require-2.1.11.min.js"></script>') 
+	}
+
+	copy {
+	    from '.'
+	    into 'production/'
+	    include '*.html'
+	    exclude 'index.html'
+	}
+	copy {
+	    from '.htaccess'
+	    into 'production/'
+	}
+    copy {
+	    from 'img'
+	    into 'production/img'
+	}
+	copy {
+	    from 'soap'
+	    into 'production/soap'
+	    exclude 'tmp'
+	}
+    copy {
+	    from 'css/images'
+	    into 'production/css/images'
+	}
+    copy {
+	    from 'font'
+	    into 'production/font'
+	}
+    copy {
+	    from 'tmp'
+	    into 'production/tmp'
+	    exclude '*.xml'
+	}
+	copy {
+	    from 'ruby'
+	    into 'production/ruby'
+	}
+	copy {
+	    from 'app'
+	    into 'production/app'
+	    exclude '**/traffic*', '**/sign-settings*', '**/unplanned-events*'
+	}
+	
+	exec {
+		commandLine 'bash', './optimize-images.sh'
+	}
+	exec {
+		commandLine 'gzip', '-f', 'production/app/roads'
+	}
+	exec {
+		commandLine 'gzip', '-f', 'production/app/signs'
+	}
+
+	copy {
+	    from 'app/roads'
+	    into 'production/app'
+	}
+
+	copy {
+	    from 'app/signs'
+	    into 'production/app'
+	}
+
+	new File("build/index-template.html").renameTo(new File("index.html"))
+	
+}
+
+task js << {	
+
+	exec {
+		commandLine 'node', 'r.js', '-o', 'build.js'
+	}
+}
+

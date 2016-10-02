@@ -1,0 +1,14 @@
+<table>
+  <tr>
+    <th colspan="2">Unplanned Event</th>
+  </tr>
+  <tbody>
+    <tr>
+      <td><%=event.description%></td>
+    </tr>
+    <tr>
+      <td><%=base.humanTime(new Date().getTime(), event.timestamp * 1000)%></td>
+    </tr>
+  </tbody>
+</table>
+

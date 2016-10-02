@@ -1,0 +1,34 @@
+#SetOutputFilter RATE_LIMIT
+#SetEnv rate-limit 100 
+    
+ForceType application/json
+<IfModule mod_rewrite.c>
+RewriteEngine On
+# If the user agent accepts gzip encoding...
+RewriteCond %{HTTP:Accept-Encoding} gzip
+# ...and if gzip-encoded version of the requested file exists (<file>.gz)...
+RewriteCond %{REQUEST_FILENAME}.gz -f 
+# ...then serve the gzip-encoded file. Done.
+RewriteRule ^(.+)$ $1.gz [L,E=GZIP:true]
+Header set Content-Encoding gzip env=REDIRECT_GZIP
+</IfModule>
+
+<IfModule mod_headers.c>
+Header append Vary: Accept-Encoding
+</IfModule>
+
+<FilesMatch "roads">
+Header set Cache-Control "max-age=604800"
+</FilesMatch>
+<FilesMatch "signs">
+Header set Cache-Control "max-age=604800"
+</FilesMatch>
+<FilesMatch "sign-settings">
+Header set Cache-Control "max-age=180"
+</FilesMatch>
+<FilesMatch "traffic">
+Header set Cache-Control "max-age=60"
+</FilesMatch>
+<FilesMatch "unplanned-events">
+Header set Cache-Control "max-age=180"
+</FilesMatch>

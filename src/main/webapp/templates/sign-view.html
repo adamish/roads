@@ -1,0 +1,28 @@
+<table>
+  <tr>
+    <th colspan="2"><%=sign.type.indexOf('VMS')>=0?'Variable Message Sign':'Matrix Signal'%> <%=sign.gid%></th>
+  </tr>
+  <tbody>
+    <tr>
+      <td class="label">Road</td>
+      <td><%=road%></td>
+    </tr>
+    <tr>
+      <td class="label">Type</td>
+      <td><%=sign.type%></td>
+    </tr>
+    <tr>
+      <td colspan="2" class="gantry-overview"><div></div></td>
+    </tr>
+    <%if (sign.time) {%>
+    <tr>
+      <td class="label">Time set</td>
+      <td><%=base.humanTime(new Date().getTime(), sign.time * 1000)%></td>
+    </tr>
+    <% } %>
+    <tr>
+      <td colspan="2"><button class="street-view control">Street view</button></td>
+    </tr>
+  </tbody>
+</table>
+

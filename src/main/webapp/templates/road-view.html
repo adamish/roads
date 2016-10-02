@@ -1,0 +1,32 @@
+<table>
+	<thead>
+		<tr>
+			<th colspan="6"><%=road.name%></th>
+		</tr>
+	</thead>
+	<tbody>
+		<% if (traffic && traffic.speed > 0) { %>
+		<tr>
+			<td class="label">Time</td>
+			<td><%=base.humanTime(new Date().getTime(), time * 1000)%></td>
+			<td class="label">Speed</td>
+			<td><%=Math.round(traffic.speed/1.609344)%> mph</td>
+		</tr>
+		<% if (traffic.flow >= 0) { %>
+		<tr>
+			<td class="label">Flow</td>
+			<td><%=traffic.flow%> vph</td>
+			<td class="label">Occupancy</td>
+			<td><%=traffic.occupancy%>%</td>
+		</tr>
+     	<% } %>
+		
+		<tr>
+		</tr>
+		<% } else { %>
+		<tr>
+			<td colspan="6">No traffic information available</td>
+		</tr>
+		<% } %>
+	</tbody>
+</table>

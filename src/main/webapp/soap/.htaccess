@@ -1,0 +1,19 @@
+Order deny,allow
+Deny from all
+Allow from 127.0.0.1
+Allow from 195.188
+Allow from 194.30
+Allow from 86.134.99.146
+Options +ExecCGI
+AddHandler cgi-script .rb
+AddHandler cgi-script .sh
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(.*)processed-traffic-data$ $1processed-traffic-data.rb [L]
+</IfModule>
+
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteRule ^(.*)vms$ $1vms.rb [L]
+</IfModule>
